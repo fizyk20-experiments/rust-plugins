@@ -1,27 +1,20 @@
-#![feature(dynamic_lib)]
 extern crate plugin_interface;
+extern crate libloading;
 use plugin_interface::PluginTrait;
+use libloading::{Library, Symbol};
 use std::env::current_dir;
-use std::dynamic_lib::DynamicLibrary;
-use std::mem::transmute;
 
 fn main() {
-	let mut path = current_dir().unwrap();
+    let mut path = current_dir().unwrap();
 	path.push("libplugin.so");
 	println!("Path: {}", path.display());
 
-	let lib = match DynamicLibrary::open(Some(path.as_path())) {
-		Ok(lib) => lib,
-		Err(error) => panic!("Library open failed: {}", error)
-	};
+    let lib = Library::new(path.as_path()).unwrap();
 
 	println!("Success.");
 
-	let object_factory: extern fn() -> Box<PluginTrait> = unsafe {
-		match lib.symbol::<u8>("object_factory") {
-			Ok(fun) => transmute(fun),
-			Err(error) => panic!("Reading symbol failed: {}", error)
-		}
+	let object_factory: Symbol<extern fn() -> Box<PluginTrait>> = unsafe {
+        lib.get(b"object_factory").unwrap()
 	};
 
 	println!("Success 2.");

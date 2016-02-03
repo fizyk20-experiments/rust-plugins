@@ -1,7 +1,10 @@
 [package]
 name = "plugin_test"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Bartłomiej Kamiński <fizyk20@gmail.com>"]
 
+[dependencies]
+libloading = "*"
+
 [dependencies.plugin_interface]
-path ="../plugin_interface"
+path = "../plugin_interface"
