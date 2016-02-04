@@ -4,7 +4,7 @@ use plugin_interface::PluginTrait;
 struct Whatever;
 
 impl PluginTrait for Whatever {
-	fn get_some_string(&self) -> String { "whatever".to_string() }
+	fn get_some_string(&self) -> &'static str { "whatever" }
 }
 
 #[no_mangle]

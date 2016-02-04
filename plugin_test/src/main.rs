@@ -9,19 +9,25 @@ fn main() {
     path.push("libplugin.so");
     println!("Path: {}", path.display());
 
-    let lib = Library::new(path.as_path()).unwrap();
+    let x: &'static str;
 
-    println!("Success.");
+    {
+        let lib = Library::new(path.as_path()).unwrap();
 
-    let object_factory: Symbol<extern fn() -> Box<PluginTrait>> = unsafe {
-        lib.get(b"object_factory").unwrap()
-    };
+        println!("Success.");
 
-    println!("Success 2.");
+        let object_factory: Symbol<extern fn() -> Box<PluginTrait>> = unsafe {
+            lib.get(b"object_factory").unwrap()
+        };
 
-    let obj = object_factory();
+        println!("Success 2.");
 
-    println!("Success 3.");
+        let obj = object_factory();
 
-    println!("Result: {}", obj.get_some_string());
+        x = obj.get_some_string();
+
+        println!("Success 3.");
+    }
+
+    println!("Result: {}", x);
 }
